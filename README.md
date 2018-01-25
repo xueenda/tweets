@@ -10,12 +10,14 @@ $ npm install
 
 To run local:
 ```bash
-$ npm run watch```
+$ npm run watch
+```
 
 To develop:
 
 ```bash
-$ npm run dev```
+$ npm run dev
+```
 
 To build for production:
 
