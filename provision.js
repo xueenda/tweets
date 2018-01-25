@@ -1,5 +1,5 @@
 var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database(':memory:');
+global.db = new sqlite3.Database(':memory:');
 
 var lineReader = require('readline').createInterface({
   input: require('fs').createReadStream('./Tweets.txt', 'utf8')
@@ -16,9 +16,9 @@ db.serialize(function() {
 
   var stmt = db.prepare("INSERT INTO tweets VALUES (?, ?,?,?)");
   readFile(stmt, function(){
-    db.each("SELECT * FROM tweets", function(err, row) {
-      console.log(row);
-    });
+    // db.each("SELECT * FROM tweets", function(err, row) {
+    //   console.log(row);
+    // });
   });
 });
 

@@ -1,3 +1,3 @@
 module.exports = {
-  api_url: "https://api-dev.getcharly.com"
+  api_url: "http://127.0.0.1:3000"
 };

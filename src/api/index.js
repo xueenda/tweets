@@ -1,9 +1,14 @@
 import axios from 'axios'
-axios.defaults.withCredentials = true
+// axios.defaults.withCredentials = true
 
 let url = Config.api_url,
   instance = axios.create({
-    baseURL: url
+    baseURL: url,
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*'
+    }
   })
 
 
@@ -11,40 +16,11 @@ let url = Config.api_url,
  *  Example: post("pubnub/grant", {auth_key: "random"}) */
 
 export default {
-  partnerHot: function() {
-    return get("partner/hot")
+  search: function(term) {
+    return _request('/search?term=' + term);
   }
 }
 
-function getHeader() {
-  let headers = {}
-  if (localStorage.getItem("token") || window.tweet_token) {
-    headers = {
-      Authorization: "Bearer " + (localStorage.getItem("token") || window.tweet_token)
-    }
-  }
-  return { headers: headers }
-}
-
-function requestWithRetry(op, url, data, options) {
-  return op.apply(instance, (op === instance.get) ? [url, options] : [url, data, options])
-    .then(res => res.data, err => {
-      return instance.post("auth/refresh", {
-          "refresh_token": localStorage.getItem("refresh_token")
-        }, getHeader())
-        .then(resp => {
-          localStorage.setItem("token", resp.data.token)
-          let newOptions = Object.assign({}, options, getHeader()),
-            args = (op === instance.get) ? [url, newOptions] : [url, data, newOptions]
-          return op.apply(instance, args)
-        })
-    })
-}
-
-function post(url, data, options) {
-  return requestWithRetry(instance.post, url, data, options || getHeader())
-}
-
-function get(url, options) {
-  return requestWithRetry(instance.get, url, null, options || getHeader())
+function _request(url) {
+  return instance.get(url).then(res => Promise.resolve(res.data));
 }

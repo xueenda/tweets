@@ -9,6 +9,14 @@
             <input type="text" class="form-input" placeholder="" v-model="term">
             <button class="btn btn-primary input-group-btn" @click="search">Search</button>
           </div>
+          <br>
+          <br>
+          <div class="tile" v-for="tweet in tweets">
+            <div class="tile-content">
+              <p class="tile-title" v-html=urlify(tweet.text)></p>
+              <p class="tile-subtitle text-gray float-right">{{tweet.user_id}} {{tweet.created_at}}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -26,18 +34,30 @@ export default {
     },
     data() {
       return {
-        term: ''
+        term: '',
+        tweets: []
       }
     },
     methods: {
       search() {
-        console.log(this.term)
+        Api.search(this.term).then(res => this.tweets = res);
       },
+      urlify(text) {
+        var urlRegex = /(https?:\/\/[^\s]+)/g;
+        return text.replace(urlRegex, function(url) {
+          return '<a href="' + url + '">' + url + '</a>';
+        })
+      }
+
     }
 }
 
 </script>
 <style scoped>
+.s-title {
+  text-align: center;
+}
+
 .container {
   margin: auto;
   max-width: 1000px;
