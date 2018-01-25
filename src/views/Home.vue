@@ -13,7 +13,7 @@
           <br>
           <div class="tile" v-for="tweet in tweets">
             <div class="tile-content">
-              <p class="tile-title" v-html=urlify(tweet.text)></p>
+              <p class="tile-title" v-html=hashify(urlify(tweet.text))></p>
               <p class="tile-subtitle text-gray float-right">{{tweet.user_id}} {{tweet.created_at}}</p>
             </div>
           </div>
@@ -24,10 +24,16 @@
 </template>
 <script>
 import Api from '../api'
+import util from '../helper/util'
 
 export default {
   mounted() {
+      let query = util.parseQuery(location.search);
 
+      if (query && query.term) {
+        this.term = query.term;
+        this.search(null, query.term);
+      }
     },
     watch: {
 
@@ -39,13 +45,21 @@ export default {
       }
     },
     methods: {
-      search() {
-        Api.search(this.term).then(res => this.tweets = res);
+      search(e, term) {
+        console.log(term);
+        Api.search(term || this.term).then(res => this.tweets = res);
       },
       urlify(text) {
         var urlRegex = /(https?:\/\/[^\s]+)/g;
         return text.replace(urlRegex, function(url) {
           return '<a href="' + url + '">' + url + '</a>';
+        })
+      },
+
+      hashify(text) {
+        var hashRegex = /(#[^\s]+)/g;
+        return text.replace(hashRegex, function(hash) {
+          return '<a href="' + Config.api_url + '/term=' + hash.replace('#', '') + '">' + hash + '</a>';
         })
       }
 
