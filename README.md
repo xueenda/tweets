@@ -23,27 +23,13 @@ To build for production:
 $ npm run build
 ```
 
-To lint you code:
-
-```bash
-$ npm run lint
-```
-
 
 ---
 
-need a break
 
-## Script
-Place applicants.sqlite3 in root folder
+## Backend server
+To start:
 
 ```bash
-$ node script/exportCSV.js 2014-11-12 2014-11-20
+$ node server.js
 ```
-
-Export to CSV
-```bash
-$ node script/exportCSV.js 2014-11-12 2014-11-20 > applicants_stats.csv
-```
-
-Have in
